@@ -309,6 +309,24 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                     }
                 });
                 break;
+            case R.id.btn_move_forward:
+            case R.id.btn_move_backward:
+            case R.id.btn_move_left:
+            case R.id.btn_move_right:
+            case R.id.btn_move_up:
+            case R.id.btn_move_down:
+            case R.id.btn_rotate_left:
+            case R.id.btn_rotate_right:
+            case R.id.btn_Land:
+                flightController.startLanding(new CommonCallbacks.CompletionCallback() {
+                    @Override
+                    public void onResult(DJIError djiError) {
+                        DialogUtils.showDialogBasedOnError(getContext(), djiError);
+                    }
+                });
+                break;
+
+
             default:
                 break;
         }
