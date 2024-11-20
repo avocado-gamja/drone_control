@@ -206,6 +206,7 @@ public class MobileRemoteControllerView extends RelativeLayout
                     }
                 });
                 break;
+
             case R.id.btn_force_land:
                 flightController.confirmLanding(new CompletionCallback() {
                     @Override
