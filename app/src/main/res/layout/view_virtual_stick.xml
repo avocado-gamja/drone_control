@@ -90,75 +90,75 @@
         android:layout_below="@+id/btn_vertical_control_mode"
         android:layout_alignLeft="@+id/btn_vertical_control_mode"
         android:layout_marginTop="10dp"/>
-<!--    <Button-->
-<!--        android:id="@+id/btn_move_forward"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_above="@+id/directionJoystickLeft"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_marginBottom="10dp"-->
-<!--        android:text="Front" />-->
+    <Button
+        android:id="@+id/btn_move_forward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/directionJoystickLeft"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:text="Front" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_move_backward"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@+id/directionJoystickLeft"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:text="Back" />-->
+    <Button
+        android:id="@+id/btn_move_backward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/directionJoystickLeft"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Back" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_move_left"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignLeft="@+id/directionJoystickLeft"-->
-<!--        android:layout_centerVertical="true"-->
-<!--        android:text="Left" />-->
+    <Button
+        android:id="@+id/btn_move_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/directionJoystickLeft"
+        android:layout_centerVertical="true"
+        android:text="Left" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_move_right"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignRight="@+id/directionJoystickLeft"-->
-<!--        android:layout_centerVertical="true"-->
-<!--        android:text="Right" />-->
+    <Button
+        android:id="@+id/btn_move_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/directionJoystickLeft"
+        android:layout_centerVertical="true"
+        android:text="Right" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_move_up"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignLeft="@+id/directionJoystickRight"-->
-<!--        android:layout_centerVertical="true"-->
-<!--        android:text="Up" />-->
+    <Button
+        android:id="@+id/btn_move_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/directionJoystickRight"
+        android:layout_centerVertical="true"
+        android:text="Up" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_move_down"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignRight="@+id/directionJoystickRight"-->
-<!--        android:layout_centerVertical="true"-->
-<!--        android:text="Down" />-->
+    <Button
+        android:id="@+id/btn_move_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/directionJoystickRight"
+        android:layout_centerVertical="true"
+        android:text="Down" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_rotate_left"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@+id/directionJoystickRight"-->
-<!--        android:layout_toLeftOf="@+id/directionJoystickRight"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:text="Rotate Left" />-->
+    <Button
+        android:id="@+id/btn_rotate_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/directionJoystickRight"
+        android:layout_toLeftOf="@+id/directionJoystickRight"
+        android:layout_marginTop="10dp"
+        android:text="Rotate Left" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_rotate_right"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@+id/directionJoystickRight"-->
-<!--        android:layout_toRightOf="@+id/directionJoystickRight"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:text="Rotate Right" />-->
+    <Button
+        android:id="@+id/btn_rotate_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/directionJoystickRight"
+        android:layout_toRightOf="@+id/directionJoystickRight"
+        android:layout_marginTop="10dp"
+        android:text="Rotate Right" />
 
-
+    <!-- 기존의 다른 버튼과 View들 -->
 
     <com.dji.sdk.sample.internal.utils.OnScreenJoystick
         android:id="@+id/directionJoystickRight"

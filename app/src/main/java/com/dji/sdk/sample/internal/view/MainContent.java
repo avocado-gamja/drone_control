@@ -387,14 +387,12 @@ public class MainContent extends RelativeLayout {
                 if (aircraft.getRemoteController() != null && aircraft.getRemoteController().isConnected()) {
                     mTextConnectionStatus.setText(R.string.connection_only_rc);
                     mTextProduct.setText(R.string.product_information);
-//                    mBtnOpen.setEnabled(false);
-                    mBtnOpen.setEnabled(true);
+                    mBtnOpen.setEnabled(false);
                     mTextModelAvailable.setText("Firmware version:N/A");
                 }
             }
         } else {
-//            mBtnOpen.setEnabled(false);
-            mBtnOpen.setEnabled(true);
+            mBtnOpen.setEnabled(false);
             mTextProduct.setText(R.string.product_information);
             mTextConnectionStatus.setText(R.string.connection_loose);
             mTextModelAvailable.setText("Firmware version:N/A");

@@ -198,6 +198,7 @@ public class MobileRemoteControllerView extends RelativeLayout
         }
         switch (v.getId()) {
             case R.id.btn_take_off:
+
                 flightController.startTakeoff(new CompletionCallback() {
                     @Override
                     public void onResult(DJIError djiError) {
@@ -205,7 +206,6 @@ public class MobileRemoteControllerView extends RelativeLayout
                     }
                 });
                 break;
-
 
             case R.id.btn_force_land:
                 flightController.confirmLanding(new CompletionCallback() {
