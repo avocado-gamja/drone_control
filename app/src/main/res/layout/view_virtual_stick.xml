@@ -90,6 +90,49 @@
         android:layout_below="@+id/btn_vertical_control_mode"
         android:layout_alignLeft="@+id/btn_vertical_control_mode"
         android:layout_marginTop="10dp"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_move_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Up"
+            style="@style/common_button" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_move_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Left"
+                style="@style/common_button" />
+
+            <Button
+                android:id="@+id/btn_move_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Right"
+                style="@style/common_button" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_move_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Down"
+            style="@style/common_button" />
+
+    </LinearLayout>
+
 
     <com.dji.sdk.sample.internal.utils.OnScreenJoystick
         android:id="@+id/directionJoystickRight"
