@@ -2,6 +2,19 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_move_forward"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_move_forward"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
     <TextView
         android:id="@+id/textview_simulator"
         android:layout_width="wrap_content"
@@ -19,7 +32,7 @@
         android:layout_below="@+id/textview_simulator"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="Disable Virtual Stick" />
+        android:text="Disable Manual control" />
 
     <Button
         android:id="@+id/btn_enable_virtual_stick"
@@ -29,7 +42,7 @@
         android:layout_below="@+id/btn_disable_virtual_stick"
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/btn_disable_virtual_stick"
-        android:text="Enable Virtual Stick" />
+        android:text="Enable Manual control" />
 
     <Button
         android:id="@+id/btn_horizontal_coordinate"
@@ -92,7 +105,14 @@
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/btn_vertical_control_mode"
         android:text="Take Off" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_move_forward"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
     <Button
         android:id="@+id/btn_move_forward"
         android:layout_width="wrap_content"
@@ -110,6 +130,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:text="Back" />
+
 
     <Button
         android:id="@+id/btn_move_left"
@@ -161,6 +182,14 @@
         android:layout_toRightOf="@+id/directionJoystickRight"
         android:text="Rotate Right" />
     <Button
+        android:id="@+id/btn_rotate_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/directionJoystickRight"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/directionJoystickRight"
+        android:text="Rotate Stop" />
+    <Button
         android:id="@+id/btn_Land"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -168,6 +197,8 @@
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/directionJoystickRight"
         android:text="Land" />
+    </LinearLayout>
+    </LinearLayout>
 
     <com.dji.sdk.sample.internal.utils.OnScreenJoystick
         android:id="@+id/directionJoystickRight"

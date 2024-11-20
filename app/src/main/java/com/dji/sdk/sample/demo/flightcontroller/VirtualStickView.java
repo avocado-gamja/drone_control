@@ -67,7 +67,29 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
     private float throttle;
     private boolean isSimulatorActived = false;
     private FlightController flightController = null;
+
+    private boolean isRotatingLeft = false;
+    private boolean isRotatingRight = false;
+    // 전/후진 제어용 변수
+    private boolean isMovingForward = false;
+    private boolean isMovingBackward = false;
+
+    // 좌/우 이동 제어용 변수
+    private boolean isMovingLeft = false;
+    private boolean isMovingRight = false;
+
+    // 상승/하강 제어용 변수
+    private boolean isMovingUp = false;
+    private boolean isMovingDown = false;
+
+    // 모든 이동 정지 상태 확인용 (선택적)
+    private boolean isMovingStopped = true;
+
+
     private Simulator simulator = null;
+
+
+
 
     public VirtualStickView(Context context) {
         super(context);
@@ -194,8 +216,8 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                 if (Math.abs(pY) < 0.02) {
                     pY = 0;
                 }
-                float pitchJoyControlMaxSpeed = 10;
-                float rollJoyControlMaxSpeed = 10;
+                float pitchJoyControlMaxSpeed = 5;
+                float rollJoyControlMaxSpeed = 5;
 
                 pitch = pitchJoyControlMaxSpeed * pY;
                 roll = rollJoyControlMaxSpeed * pX;
@@ -220,7 +242,15 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                     pY = 0;
                 }
                 float verticalJoyControlMaxSpeed = 4;
-                float yawJoyControlMaxSpeed = 20;
+                float yawJoyControlMaxSpeed = 10;
+
+                if (isRotatingLeft) {
+                    yaw = -yawJoyControlMaxSpeed; // 왼쪽으로 회전하는 값
+                } else if (isRotatingRight) {
+                    yaw = yawJoyControlMaxSpeed; // 오른쪽으로 회전하는 값
+                } else {
+                    yaw = yawJoyControlMaxSpeed * pX;
+                }
 
                 yaw = yawJoyControlMaxSpeed * pX;
                 throttle = verticalJoyControlMaxSpeed * pY;
@@ -234,6 +264,14 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
         });
     }
 
+
+    private void sendControlData() {
+        if (null == sendVirtualStickDataTimer) {
+            sendVirtualStickDataTask = new SendVirtualStickDataTask();
+            sendVirtualStickDataTimer = new Timer();
+            sendVirtualStickDataTimer.schedule(sendVirtualStickDataTask, 0, 200);
+        }
+    }
     private void tearDownListeners() {
         Simulator simulator = ModuleVerificationUtil.getSimulator();
         if (simulator != null) {
@@ -270,39 +308,92 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                 break;
 
             case R.id.btn_roll_pitch_control_mode:
-                if (flightController.getRollPitchControlMode() == RollPitchControlMode.VELOCITY) {
-                    flightController.setRollPitchControlMode(RollPitchControlMode.ANGLE);
-                } else {
-                    flightController.setRollPitchControlMode(RollPitchControlMode.VELOCITY);
-                }
-                ToastUtils.setResultToToast(flightController.getRollPitchControlMode().name());
+
+                flightController.startLanding(new CommonCallbacks.CompletionCallback() {
+                    @Override
+                    public void onResult(DJIError djiError) {
+                        DialogUtils.showDialogBasedOnError(getContext(), djiError);
+                    }
+                });
+//                if (flightController.getRollPitchControlMode() == RollPitchControlMode.VELOCITY) {
+//                    flightController.setRollPitchControlMode(RollPitchControlMode.ANGLE);
+//                } else {
+//                    flightController.setRollPitchControlMode(RollPitchControlMode.VELOCITY);
+//                }
+//                ToastUtils.setResultToToast(flightController.getRollPitchControlMode().name());
                 break;
             case R.id.btn_yaw_control_mode:
-                if (flightController.getYawControlMode() == YawControlMode.ANGULAR_VELOCITY) {
-                    flightController.setYawControlMode(YawControlMode.ANGLE);
-                } else {
-                    flightController.setYawControlMode(YawControlMode.ANGULAR_VELOCITY);
-                }
-                ToastUtils.setResultToToast(flightController.getYawControlMode().name());
+//                DialogUtils.showDialog(getContext(), "rotation start");
+
+
+//                isRotatingLeft = true;
+                yaw = -20; // 왼쪽으로 회전하는 값
+                DialogUtils.showDialog(getContext(), String.format("yaw %f pitch %f roll %f", yaw,pitch,roll));
+                sendControlData();
+
+//                if (flightController.getYawControlMode() == YawControlMode.ANGULAR_VELOCITY) {
+//                    flightController.setYawControlMode(YawControlMode.ANGLE);
+//                } else {
+//                    flightController.setYawControlMode(YawControlMode.ANGULAR_VELOCITY);
+//                }
+//                ToastUtils.setResultToToast(flightController.getYawControlMode().name());
                 break;
             case R.id.btn_vertical_control_mode:
-                if (flightController.getVerticalControlMode() == VerticalControlMode.VELOCITY) {
-                    flightController.setVerticalControlMode(VerticalControlMode.POSITION);
-                } else {
-                    flightController.setVerticalControlMode(VerticalControlMode.VELOCITY);
-                }
-                ToastUtils.setResultToToast(flightController.getVerticalControlMode().name());
+                DialogUtils.showDialog(getContext(), " stop");
+
+//                 boolean isRotatingLeft = false;
+//                 boolean isRotatingRight = false;
+//                // 전/후진 제어용 변수
+//                 boolean isMovingForward = false;
+//                 boolean isMovingBackward = false;
+//
+//                // 좌/우 이동 제어용 변수
+//                 boolean isMovingLeft = false;
+//                 boolean isMovingRight = false;
+//
+//                // 상승/하강 제어용 변수
+//                 boolean isMovingUp = false;
+//                 boolean isMovingDown = false;
+
+                // 모든 이동 정지 상태 확인용 (선택적)
+                 boolean isMovingStopped = true;
+                yaw = 0; // 회전을 멈추기 위해 yaw 값을 0으로 설정
+                pitch = 0;
+                roll = 0;
+
+                sendControlData();
+//                if (flightController.getVerticalControlMode() == VerticalControlMode.VELOCITY) {
+//                    flightController.setVerticalControlMode(VerticalControlMode.POSITION);
+//                } else {
+//                    flightController.setVerticalControlMode(VerticalControlMode.VELOCITY);
+//                }
+//                ToastUtils.setResultToToast(flightController.getVerticalControlMode().name());
                 break;
             case R.id.btn_horizontal_coordinate:
-                if (flightController.getRollPitchCoordinateSystem() == FlightCoordinateSystem.BODY) {
-                    flightController.setRollPitchCoordinateSystem(FlightCoordinateSystem.GROUND);
-                } else {
-                    flightController.setRollPitchCoordinateSystem(FlightCoordinateSystem.BODY);
-                }
-                ToastUtils.setResultToToast(flightController.getRollPitchCoordinateSystem().name());
+                DialogUtils.showDialog(getContext(), "going front");
+                isMovingForward = true;
+                pitch = 0.1f; // 앞으로 직진하는 값
+                sendControlData();
+//                if (flightController.getRollPitchCoordinateSystem() == FlightCoordinateSystem.BODY) {
+//                    flightController.setRollPitchCoordinateSystem(FlightCoordinateSystem.GROUND);
+//                } else {
+//                    flightController.setRollPitchCoordinateSystem(FlightCoordinateSystem.BODY);
+//                }
+//                ToastUtils.setResultToToast(flightController.getRollPitchCoordinateSystem().name());
                 break;
             case R.id.btn_take_off:
                 flightController.startTakeoff(new CommonCallbacks.CompletionCallback() {
+                    @Override
+                    public void onResult(DJIError djiError) {
+                        DialogUtils.showDialogBasedOnError(getContext(), djiError);
+                    }
+                });
+                break;
+            case R.id.btn_Land:
+
+                DialogUtils.showDialog(getContext(), "landingStart");
+
+                flightController.startLanding(new CommonCallbacks.CompletionCallback() {
                     @Override
                     public void onResult(DJIError djiError) {
                         DialogUtils.showDialogBasedOnError(getContext(), djiError);
@@ -316,15 +407,13 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
             case R.id.btn_move_up:
             case R.id.btn_move_down:
             case R.id.btn_rotate_left:
+
             case R.id.btn_rotate_right:
-            case R.id.btn_Land:
-                flightController.startLanding(new CommonCallbacks.CompletionCallback() {
-                    @Override
-                    public void onResult(DJIError djiError) {
-                        DialogUtils.showDialogBasedOnError(getContext(), djiError);
-                    }
-                });
-                break;
+
+            case R.id.btn_rotate_stop:
+
+
+
 
 
             default:
@@ -387,4 +476,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
             }
         }
     }
+
+
+
 }
