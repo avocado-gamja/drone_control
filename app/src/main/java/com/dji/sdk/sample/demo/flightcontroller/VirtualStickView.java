@@ -225,7 +225,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                 if (null == sendVirtualStickDataTimer) {
                     sendVirtualStickDataTask = new SendVirtualStickDataTask();
                     sendVirtualStickDataTimer = new Timer();
-                    sendVirtualStickDataTimer.schedule(sendVirtualStickDataTask, 100, 200);
+                    sendVirtualStickDataTimer.schedule(sendVirtualStickDataTask, 50, 100);
                 }
             }
         });
@@ -258,7 +258,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                 if (null == sendVirtualStickDataTimer) {
                     sendVirtualStickDataTask = new SendVirtualStickDataTask();
                     sendVirtualStickDataTimer = new Timer();
-                    sendVirtualStickDataTimer.schedule(sendVirtualStickDataTask, 0, 200);
+                    sendVirtualStickDataTimer.schedule(sendVirtualStickDataTask, 0, 100);
                 }
             }
         });
@@ -269,7 +269,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
         if (null == sendVirtualStickDataTimer) {
             sendVirtualStickDataTask = new SendVirtualStickDataTask();
             sendVirtualStickDataTimer = new Timer();
-            sendVirtualStickDataTimer.schedule(sendVirtualStickDataTask, 0, 200);
+            sendVirtualStickDataTimer.schedule(sendVirtualStickDataTask, 0, 100);
         }
     }
     private void tearDownListeners() {
@@ -323,13 +323,13 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
 //                ToastUtils.setResultToToast(flightController.getRollPitchControlMode().name());
                 break;
             case R.id.btn_yaw_control_mode:
-//                DialogUtils.showDialog(getContext(), "rotation start");
+                isMovingStopped = false;
+                DialogUtils.showDialog(getContext(), "rotation start");
+                isRotatingLeft = true;
+                isRotatingRight = false;
 
-
-//                isRotatingLeft = true;
-                yaw = -20; // 왼쪽으로 회전하는 값
-                DialogUtils.showDialog(getContext(), String.format("yaw %f pitch %f roll %f", yaw,pitch,roll));
                 sendControlData();
+                DialogUtils.showDialog(getContext(), String.format("yaw %f pitch %f roll %f", yaw,pitch,roll));
 
 //                if (flightController.getYawControlMode() == YawControlMode.ANGULAR_VELOCITY) {
 //                    flightController.setYawControlMode(YawControlMode.ANGLE);
@@ -356,7 +356,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
 //                 boolean isMovingDown = false;
 
                 // 모든 이동 정지 상태 확인용 (선택적)
-                 boolean isMovingStopped = true;
+                isMovingStopped = true;
                 yaw = 0; // 회전을 멈추기 위해 yaw 값을 0으로 설정
                 pitch = 0;
                 roll = 0;
@@ -370,9 +370,11 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
 //                ToastUtils.setResultToToast(flightController.getVerticalControlMode().name());
                 break;
             case R.id.btn_horizontal_coordinate:
+                isMovingStopped = false;
                 DialogUtils.showDialog(getContext(), "going front");
                 isMovingForward = true;
-                pitch = 0.1f; // 앞으로 직진하는 값
+                isMovingBackward = false;
+                pitch = 0.01f; // 앞으로 직진하는 값
                 sendControlData();
 //                if (flightController.getRollPitchCoordinateSystem() == FlightCoordinateSystem.BODY) {
 //                    flightController.setRollPitchCoordinateSystem(FlightCoordinateSystem.GROUND);
@@ -464,6 +466,26 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
         @Override
         public void run() {
             if (flightController != null) {
+                if(isMovingStopped) {
+                    pitch = 0;
+                    yaw = 0;
+                    isMovingForward = false;
+                    isMovingBackward = false;
+                    isRotatingLeft= false;
+                    isRotatingRight= false;
+                }
+
+                    if (isMovingForward) {
+                        pitch = 0.01f;
+                    } else if (isMovingBackward) {
+                        pitch = -0.01f;
+                    }
+                    if (isRotatingLeft) {
+                        yaw = -5.0f;
+                    } else if (isRotatingRight) {
+                        yaw = 5.0f;
+                    }
+
                 //接口写反了，setPitch()应该传入roll值，setRoll()应该传入pitch值
                 flightController.sendVirtualStickFlightControlData(new FlightControlData(roll, pitch, yaw, throttle), new CommonCallbacks.CompletionCallback() {
                     @Override
