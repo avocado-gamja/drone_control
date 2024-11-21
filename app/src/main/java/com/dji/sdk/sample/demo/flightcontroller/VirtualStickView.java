@@ -412,6 +412,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                 });
                 break;
             case R.id.btn_move_forward:
+                DialogUtils.showDialog(getContext(), "going forward");
                 isMoving=true;
                 isMovingForward = true;
                 isMovingBackward = false;
@@ -424,6 +425,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                 break;
 
             case R.id.btn_move_backward:
+                DialogUtils.showDialog(getContext(), "going backwords");
                 isMoving=true;
                 isMovingForward = false;
                 isMovingBackward = true;
@@ -435,6 +437,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                 isMovingDown = false;
                 break;
             case R.id.btn_move_left:
+                DialogUtils.showDialog(getContext(), "going left");
                 isMoving=true;
                 isMovingForward = false;
                 isMovingBackward = false;
@@ -446,6 +449,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                 isMovingDown = false;
                 break;
             case R.id.btn_move_right:
+                DialogUtils.showDialog(getContext(), "going right");
                 isMoving=true;
                 isMovingForward = false;
                 isMovingBackward = false;
@@ -459,6 +463,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
             case R.id.btn_move_up:
             case R.id.btn_move_down:
             case R.id.btn_rotate_left:
+                DialogUtils.showDialog(getContext(), "going left");
                 isMoving=true;
                 isMovingForward = false;
                 isMovingBackward = false;
@@ -471,6 +476,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                 break;
 
             case R.id.btn_rotate_right:
+                DialogUtils.showDialog(getContext(), "going right");
                 isMoving=true;
                 isMovingForward = false;
                 isMovingBackward = false;
@@ -483,6 +489,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                 break;
 
             case R.id.btn_rotate_stop:
+                DialogUtils.showDialog(getContext(), "Stop");
                 isMoving=false;
                 isMovingForward = false;
                 isMovingBackward = false;
