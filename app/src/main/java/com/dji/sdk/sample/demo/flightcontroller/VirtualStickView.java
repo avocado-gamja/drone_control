@@ -102,7 +102,67 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
 
     private Simulator simulator = null;
 
+    // DroneMovementState enum 추가
+    public enum DroneMovementState {
+        STOP,
+        FORWARD,
+        BACKWARD,
+        LEFT,
+        RIGHT,
+        ROTATE_LEFT,
+        ROTATE_RIGHT,
+        UP,
+        DOWN
+    }
 
+
+    private DroneMovementState currentMovementState = DroneMovementState.STOP;
+
+    private void setDroneMovementState(DroneMovementState state) {
+        currentMovementState = state;
+        isMoving = (state != DroneMovementState.STOP);
+        resetAllMovementFlags();
+
+        switch(state) {
+            case FORWARD:
+                isMovingForward = true;
+                break;
+            case BACKWARD:
+                isMovingBackward = true;
+                break;
+            case LEFT:
+                isMovingLeft = true;
+                break;
+            case RIGHT:
+                isMovingRight = true;
+                break;
+            case ROTATE_LEFT:
+                isRotatingLeft = true;
+                break;
+            case ROTATE_RIGHT:
+                isRotatingRight = true;
+                break;
+            case UP:
+                isMovingUp = true;
+                break;
+            case DOWN:
+                isMovingDown = true;
+                break;
+        }
+
+        sendControlData();
+    }
+
+    private void resetAllMovementFlags() {
+        isMovingForward = false;
+        isMovingBackward = false;
+        isRotatingLeft = false;
+        isRotatingRight = false;
+        isMovingLeft = false;
+        isMovingRight = false;
+        isMovingUp = false;
+        isMovingDown = false;
+    }
 
 
     public VirtualStickView(Context context) {
@@ -317,11 +377,13 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
     }
 
     @Override
+
     public void onClick(View v) {
         FlightController flightController = ModuleVerificationUtil.getFlightController();
         if (flightController == null) {
             return;
         }
+
         switch (v.getId()) {
             case R.id.btn_enable_virtual_stick:
                 flightController.setVirtualStickModeEnabled(true, new CommonCallbacks.CompletionCallback() {
@@ -334,214 +396,106 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                 break;
 
             case R.id.btn_disable_virtual_stick:
-                flightController.setVirtualStickModeEnabled(false, new CommonCallbacks.CompletionCallback() {
-                    @Override
-                    public void onResult(DJIError djiError) {
-                        DialogUtils.showDialogBasedOnError(getContext(), djiError);
-                    }
-                });
+                flightController.setVirtualStickModeEnabled(false, djiError ->
+                        DialogUtils.showDialogBasedOnError(getContext(), djiError));
                 break;
 
-            case R.id.btn_roll_pitch_control_mode:
-
-                flightController.startLanding(new CommonCallbacks.CompletionCallback() {
-                    @Override
-                    public void onResult(DJIError djiError) {
-                        DialogUtils.showDialogBasedOnError(getContext(), djiError);
-                    }
-                });
-//                if (flightController.getRollPitchControlMode() == RollPitchControlMode.VELOCITY) {
-//                    flightController.setRollPitchControlMode(RollPitchControlMode.ANGLE);
-//                } else {
-//                    flightController.setRollPitchControlMode(RollPitchControlMode.VELOCITY);
-//                }
-//                ToastUtils.setResultToToast(flightController.getRollPitchControlMode().name());
-                break;
-            case R.id.btn_yaw_control_mode:
-                DialogUtils.showDialog(getContext(), "rotate left");
-                isMoving=true;
-                isMovingForward = false;
-                isMovingBackward = false;
-                isRotatingLeft= true;
-                isRotatingRight= false;
-                isMovingLeft = false;
-                isMovingRight = false;
-                isMovingUp = false;
-                isMovingDown = false;
-
-                sendControlData();
-
-
-//                if (flightController.getYawControlMode() == YawControlMode.ANGULAR_VELOCITY) {
-//                    flightController.setYawControlMode(YawControlMode.ANGLE);
-//                } else {
-//                    flightController.setYawControlMode(YawControlMode.ANGULAR_VELOCITY);
-//                }
-//                ToastUtils.setResultToToast(flightController.getYawControlMode().name());
-                break;
-            case R.id.btn_vertical_control_mode:
-                DialogUtils.showDialog(getContext(), " stop");
-                isMoving=false;
-                isMovingForward = false;
-                isMovingBackward = false;
-                isRotatingLeft= false;
-                isRotatingRight= false;
-                isMovingLeft = false;
-                isMovingRight = false;
-                isMovingUp = false;
-                isMovingDown = false;
-                yaw = 0; // 회전을 멈추기 위해 yaw 값을 0으로 설정
-                pitch = 0;
-                roll = 0;
-
-                sendControlData();
-//                if (flightController.getVerticalControlMode() == VerticalControlMode.VELOCITY) {
-//                    flightController.setVerticalControlMode(VerticalControlMode.POSITION);
-//                } else {
-//                    flightController.setVerticalControlMode(VerticalControlMode.VELOCITY);
-//                }
-//                ToastUtils.setResultToToast(flightController.getVerticalControlMode().name());
-                break;
-            case R.id.btn_horizontal_coordinate:
-
-                DialogUtils.showDialog(getContext(), "going front");
-
-                isMoving=true;
-                isMovingForward = true;
-                isMovingBackward = false;
-                isRotatingLeft= false;
-                isRotatingRight= false;
-                isMovingLeft = false;
-                isMovingRight = false;
-                isMovingUp = false;
-                isMovingDown = false;
-
-                sendControlData();
-//                if (flightController.getRollPitchCoordinateSystem() == FlightCoordinateSystem.BODY) {
-//                    flightController.setRollPitchCoordinateSystem(FlightCoordinateSystem.GROUND);
-//                } else {
-//                    flightController.setRollPitchCoordinateSystem(FlightCoordinateSystem.BODY);
-//                }
-//                ToastUtils.setResultToToast(flightController.getRollPitchCoordinateSystem().name());
-                break;
             case R.id.btn_take_off:
-                flightController.startTakeoff(new CommonCallbacks.CompletionCallback() {
-                    @Override
-                    public void onResult(DJIError djiError) {
-                        DialogUtils.showDialogBasedOnError(getContext(), djiError);
-                    }
-                });
+                flightController.startTakeoff(djiError ->
+                        DialogUtils.showDialogBasedOnError(getContext(), djiError));
                 break;
+
             case R.id.btn_Land:
-
                 DialogUtils.showDialog(getContext(), "landingStart");
-
-                flightController.startLanding(new CommonCallbacks.CompletionCallback() {
-                    @Override
-                    public void onResult(DJIError djiError) {
-                        DialogUtils.showDialogBasedOnError(getContext(), djiError);
-                    }
-                });
+                flightController.startLanding(djiError ->
+                        DialogUtils.showDialogBasedOnError(getContext(), djiError));
                 break;
+
+            // 이동 관련 명령들
             case R.id.btn_move_forward:
                 DialogUtils.showDialog(getContext(), "going forward");
-                isMoving=true;
-                isMovingForward = true;
-                isMovingBackward = false;
-                isRotatingLeft= false;
-                isRotatingRight= false;
-                isMovingLeft = false;
-                isMovingRight = false;
-                isMovingUp = false;
-                isMovingDown = false;
+                setDroneMovementState(DroneMovementState.FORWARD);
                 break;
 
             case R.id.btn_move_backward:
-                DialogUtils.showDialog(getContext(), "going backwords");
-                isMoving=true;
-                isMovingForward = false;
-                isMovingBackward = true;
-                isRotatingLeft= false;
-                isRotatingRight= false;
-                isMovingLeft = false;
-                isMovingRight = false;
-                isMovingUp = false;
-                isMovingDown = false;
+                DialogUtils.showDialog(getContext(), "going backwards");
+                setDroneMovementState(DroneMovementState.BACKWARD);
                 break;
+
             case R.id.btn_move_left:
                 DialogUtils.showDialog(getContext(), "going left");
-                isMoving=true;
-                isMovingForward = false;
-                isMovingBackward = false;
-                isRotatingLeft= true;
-                isRotatingRight= false;
-                isMovingLeft = false;
-                isMovingRight = false;
-                isMovingUp = false;
-                isMovingDown = false;
+                setDroneMovementState(DroneMovementState.LEFT);
                 break;
+
             case R.id.btn_move_right:
                 DialogUtils.showDialog(getContext(), "going right");
-                isMoving=true;
-                isMovingForward = false;
-                isMovingBackward = false;
-                isRotatingLeft= false;
-                isRotatingRight= true;
-                isMovingLeft = false;
-                isMovingRight = false;
-                isMovingUp = false;
-                isMovingDown = false;
+                setDroneMovementState(DroneMovementState.RIGHT);
                 break;
+
             case R.id.btn_move_up:
+                DialogUtils.showDialog(getContext(), "moving up");
+                setDroneMovementState(DroneMovementState.UP);
+                break;
+
             case R.id.btn_move_down:
+                DialogUtils.showDialog(getContext(), "moving down");
+                setDroneMovementState(DroneMovementState.DOWN);
+                break;
+
+            // 회전 관련 명령들
             case R.id.btn_rotate_left:
-                DialogUtils.showDialog(getContext(), "going left");
-                isMoving=true;
-                isMovingForward = false;
-                isMovingBackward = false;
-                isRotatingLeft= false;
-                isRotatingRight= false;
-                isMovingLeft = true;
-                isMovingRight = false;
-                isMovingUp = false;
-                isMovingDown = false;
+                DialogUtils.showDialog(getContext(), "rotating left");
+                setDroneMovementState(DroneMovementState.ROTATE_LEFT);
                 break;
 
             case R.id.btn_rotate_right:
-                DialogUtils.showDialog(getContext(), "going right");
-                isMoving=true;
-                isMovingForward = false;
-                isMovingBackward = false;
-                isRotatingLeft= false;
-                isRotatingRight= false;
-                isMovingLeft = false;
-                isMovingRight = true;
-                isMovingUp = false;
-                isMovingDown = false;
+                DialogUtils.showDialog(getContext(), "rotating right");
+                setDroneMovementState(DroneMovementState.ROTATE_RIGHT);
                 break;
 
             case R.id.btn_rotate_stop:
                 DialogUtils.showDialog(getContext(), "Stop");
-                isMoving=false;
-                isMovingForward = false;
-                isMovingBackward = false;
-                isRotatingLeft= false;
-                isRotatingRight= false;
-                isMovingLeft = false;
-                isMovingRight = false;
-                isMovingUp = false;
-                isMovingDown = false;
+                setDroneMovementState(DroneMovementState.STOP);
                 break;
 
+            // 제어 모드 설정
+            case R.id.btn_roll_pitch_control_mode:
+                flightController.setRollPitchControlMode(
+                        flightController.getRollPitchControlMode() == RollPitchControlMode.VELOCITY
+                                ? RollPitchControlMode.ANGLE
+                                : RollPitchControlMode.VELOCITY
+                );
+                ToastUtils.setResultToToast(flightController.getRollPitchControlMode().name());
+                break;
 
+            case R.id.btn_yaw_control_mode:
+                flightController.setYawControlMode(
+                        flightController.getYawControlMode() == YawControlMode.ANGULAR_VELOCITY
+                                ? YawControlMode.ANGLE
+                                : YawControlMode.ANGULAR_VELOCITY
+                );
+                ToastUtils.setResultToToast(flightController.getYawControlMode().name());
+                break;
 
+            case R.id.btn_vertical_control_mode:
+                flightController.setVerticalControlMode(
+                        flightController.getVerticalControlMode() == VerticalControlMode.VELOCITY
+                                ? VerticalControlMode.POSITION
+                                : VerticalControlMode.VELOCITY
+                );
+                ToastUtils.setResultToToast(flightController.getVerticalControlMode().name());
+                break;
 
-
-            default:
+            case R.id.btn_horizontal_coordinate:
+                flightController.setRollPitchCoordinateSystem(
+                        flightController.getRollPitchCoordinateSystem() == FlightCoordinateSystem.BODY
+                                ? FlightCoordinateSystem.GROUND
+                                : FlightCoordinateSystem.BODY
+                );
+                ToastUtils.setResultToToast(flightController.getRollPitchCoordinateSystem().name());
                 break;
         }
     }
-
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (compoundButton == btnSimulator) {
@@ -584,55 +538,48 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
     private class SendVirtualStickDataTask extends TimerTask {
         @Override
         public void run() {
-            float pitchSpeed = 0.15f;
-            float rollSpeed = 0.15f;
-            float yawSpeed = 10f;
+            final float PITCH_SPEED = 0.15f;
+            final float ROLL_SPEED = 0.15f;
+            final float YAW_SPEED = 10f;
+
             if (flightController != null) {
-                if(isMoving == false) {
-                    pitch = 0;
-                    roll = 0;
-                    yaw = 0;
-                    isMovingForward = false;
-                    isMovingBackward = false;
-                    isRotatingLeft= false;
-                    isRotatingRight= false;
-                    isMovingLeft = false;
-                    isMovingRight = false;
-                    isMovingUp = false;
-                    isMovingDown = false;
+                if (!isMoving) {
+                    pitch = roll = yaw = 0;
+                    resetAllMovementFlags();
+                } else {
+                    switch (currentMovementState) {
+                        case FORWARD:
+                            pitch = PITCH_SPEED;
+                            break;
+                        case BACKWARD:
+                            pitch = -PITCH_SPEED;
+                            break;
+                        case LEFT:
+                            roll = ROLL_SPEED;
+                            break;
+                        case RIGHT:
+                            roll = -ROLL_SPEED;
+                            break;
+                        case ROTATE_LEFT:
+                            yaw = -YAW_SPEED;
+                            break;
+                        case ROTATE_RIGHT:
+                            yaw = YAW_SPEED;
+                            break;
+                    }
                 }
 
-                    if (isMovingForward) {
-                        pitch = pitchSpeed;
-
-                    } else if (isMovingBackward) {
-                        pitch = -pitchSpeed;
-                    }
-                    if (isRotatingLeft) {
-                        yaw = -yawSpeed;
-                    } else if (isRotatingRight) {
-                        yaw = yawSpeed;
-                    }
-                    if (isMovingLeft) {
-                        roll = rollSpeed;
-
-                    } else if (isMovingRight) {
-                        roll = -rollSpeed;
-                    }
-
-                //接口写反了，setPitch()应该传入roll值，setRoll()应该传入pitch值
-                flightController.sendVirtualStickFlightControlData(new FlightControlData(roll, pitch, yaw, throttle), new CommonCallbacks.CompletionCallback() {
-                    @Override
-                    public void onResult(DJIError djiError) {
-                        if (djiError != null) {
-                            ToastUtils.setResultToToast(djiError.getDescription());
+                flightController.sendVirtualStickFlightControlData(
+                        new FlightControlData(roll, pitch, yaw, throttle),
+                        error -> {
+                            if (error != null) {
+                                ToastUtils.setResultToToast(error.getDescription());
+                            }
                         }
-                    }
-                });
+                );
             }
         }
     }
-
 
 
 }
