@@ -52,6 +52,17 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
     private Button btnSetRollPitchControlMode;
     private ToggleButton btnSimulator;
     private Button btnTakeOff;
+    private Button btnLand;
+    private Button btnMoveForward;
+    private Button btnMoveBackward;
+    private Button btnMoveLeft;
+    private Button btnMoveRight;
+    private Button btnMoveUp;
+    private Button btnMoveDown;
+    private Button btnRotateLeft;
+    private Button btnRotateRight;
+    private Button btnRotateStop;
+
 
     private TextView textView;
 
@@ -162,6 +173,16 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
         btnSetVerticalControlMode = (Button) findViewById(R.id.btn_vertical_control_mode);
         btnSetRollPitchControlMode = (Button) findViewById(R.id.btn_roll_pitch_control_mode);
         btnTakeOff = (Button) findViewById(R.id.btn_take_off);
+        btnLand = (Button) findViewById(R.id.btn_Land);
+        btnMoveForward = (Button) findViewById(R.id.btn_move_forward);
+        btnMoveBackward = (Button) findViewById(R.id.btn_move_backward);
+        btnMoveLeft = (Button) findViewById(R.id.btn_move_left);
+        btnMoveRight = (Button) findViewById(R.id.btn_move_right);
+        btnMoveUp = (Button) findViewById(R.id.btn_move_up);
+        btnMoveDown = (Button) findViewById(R.id.btn_move_down);
+        btnRotateLeft = (Button) findViewById(R.id.btn_rotate_left);
+        btnRotateRight = (Button) findViewById(R.id.btn_rotate_right);
+        btnRotateStop = (Button) findViewById(R.id.btn_rotate_stop);
 
         btnSimulator = (ToggleButton) findViewById(R.id.btn_start_simulator);
 
@@ -178,6 +199,17 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
         btnSetRollPitchControlMode.setOnClickListener(this);
         btnTakeOff.setOnClickListener(this);
         btnSimulator.setOnCheckedChangeListener(VirtualStickView.this);
+        btnTakeOff.setOnClickListener(this);
+        btnLand.setOnClickListener(this);
+        btnMoveForward.setOnClickListener(this);
+        btnMoveBackward.setOnClickListener(this);
+        btnMoveLeft.setOnClickListener(this);
+        btnMoveRight.setOnClickListener(this);
+        btnMoveUp.setOnClickListener(this);
+        btnMoveDown.setOnClickListener(this);
+        btnRotateLeft.setOnClickListener(this);
+        btnRotateRight.setOnClickListener(this);
+        btnRotateStop.setOnClickListener(this);
 
         if (isSimulatorActived) {
             btnSimulator.setChecked(true);
@@ -552,8 +584,8 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
     private class SendVirtualStickDataTask extends TimerTask {
         @Override
         public void run() {
-            float pitchSpeed = 0.05f;
-            float rollSpeed = 0.05f;
+            float pitchSpeed = 0.15f;
+            float rollSpeed = 0.15f;
             float yawSpeed = 10f;
             if (flightController != null) {
                 if(isMoving == false) {
@@ -580,6 +612,12 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                         yaw = -yawSpeed;
                     } else if (isRotatingRight) {
                         yaw = yawSpeed;
+                    }
+                    if (isMovingLeft) {
+                        roll = rollSpeed;
+
+                    } else if (isMovingRight) {
+                        roll = -rollSpeed;
                     }
 
                 //接口写反了，setPitch()应该传入roll值，setRoll()应该传入pitch值
