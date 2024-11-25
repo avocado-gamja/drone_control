@@ -555,10 +555,10 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                             pitch = -PITCH_SPEED;
                             break;
                         case LEFT:
-                            roll = ROLL_SPEED;
+                            roll = -ROLL_SPEED;
                             break;
                         case RIGHT:
-                            roll = -ROLL_SPEED;
+                            roll = ROLL_SPEED;
                             break;
                         case ROTATE_LEFT:
                             yaw = -YAW_SPEED;
