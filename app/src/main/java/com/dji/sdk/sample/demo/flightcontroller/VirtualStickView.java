@@ -38,7 +38,7 @@ import dji.keysdk.FlightControllerKey;
 import dji.keysdk.KeyManager;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.flightcontroller.Simulator;
-
+//Ahn part for controlling drone
 
 /**
  * Class for virtual stick.

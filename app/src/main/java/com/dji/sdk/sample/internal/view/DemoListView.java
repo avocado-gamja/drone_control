@@ -115,7 +115,7 @@ public class DemoListView extends FrameLayout {
                 new GroupItem(R.string.component_listview_firmware_upgrade, FirmwareUpgradeView.class));
         builder.addGroup(R.string.component_listview_sdk_4_9,
                 false,
-                new GroupItem(R.string.component_listview_live_stream, LiveStreamView.class));
+                new GroupItem(R.string.component_listview_live_stream, LiveStreamView.class));// Ahn part for liveStream
         builder.addGroup(R.string.component_listview_sdk_4_8,
                 false,
                 new GroupItem(R.string.component_listview_access_locker, AccessLockerView.class),
