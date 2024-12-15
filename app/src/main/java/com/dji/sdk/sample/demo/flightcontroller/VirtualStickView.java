@@ -385,6 +385,7 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
     }
 
     private void processCommand(String command) {
+        ToastUtils.setResultToToast("success! command :"+ command);
         switch (command.toUpperCase()) {
 //            case "TAKE_OFF":
 //                btnTakeOff.performClick();
