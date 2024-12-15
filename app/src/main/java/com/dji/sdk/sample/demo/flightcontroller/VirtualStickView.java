@@ -38,14 +38,19 @@ import dji.keysdk.FlightControllerKey;
 import dji.keysdk.KeyManager;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.flightcontroller.Simulator;
+
+import com.dji.sdk.sample.internal.utils.TcpServerUtil;
+
 //Ahn part for controlling drone
 
 /**
  * Class for virtual stick.
  */
-public class VirtualStickView extends RelativeLayout implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, PresentableView {
+public class VirtualStickView extends RelativeLayout implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, PresentableView, TcpServerUtil.TcpCommandListener {
     private Button btnEnableVirtualStick;
     private Button btnDisableVirtualStick;
+    private Button btnEnableServer;
+    private Button btnDisableServer;
     private Button btnHorizontalCoordinate;
     private Button btnSetYawControlMode;
     private Button btnSetVerticalControlMode;
@@ -97,11 +102,20 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
     private boolean isMovingDown = false;
 
 
+    private static final int TCP_PORT = 6689; // TCP 서버 포트 번호
+    private TcpServerUtil tcpServer;
 
 
+    private boolean isServerRunning = false;
 
     private Simulator simulator = null;
 
+    @Override
+    public void onCommandReceived(String command) {
+        DialogUtils.showDialog(getContext(), "Command: " + command);
+        // 명령 처리
+        processCommand(command);
+    }
     // DroneMovementState enum 추가
     public enum DroneMovementState {
         STOP,
@@ -195,7 +209,11 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
             sendVirtualStickDataTask = null;
         }
         tearDownListeners();
+        if (tcpServer != null) {
+            tcpServer.stopServer(); // 서버 종료
+        }
         super.onDetachedFromWindow();
+
     }
 
     private void init(Context context) {
@@ -203,6 +221,9 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
         layoutInflater.inflate(R.layout.view_virtual_stick, this, true);
         initParams();
         initUI();
+        // TCP 서버 초기화 및 시작
+        tcpServer = new TcpServerUtil(TCP_PORT, this);
+
     }
 
     private void initParams() {
@@ -228,6 +249,8 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
     private void initUI() {
         btnEnableVirtualStick = (Button) findViewById(R.id.btn_enable_virtual_stick);
         btnDisableVirtualStick = (Button) findViewById(R.id.btn_disable_virtual_stick);
+        btnEnableServer = (Button) findViewById(R.id.btn_enable_server_command);
+        btnDisableServer = (Button) findViewById(R.id.btn_disable_server_command);
         btnHorizontalCoordinate = (Button) findViewById(R.id.btn_horizontal_coordinate);
         btnSetYawControlMode = (Button) findViewById(R.id.btn_yaw_control_mode);
         btnSetVerticalControlMode = (Button) findViewById(R.id.btn_vertical_control_mode);
@@ -253,6 +276,8 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
 
         btnEnableVirtualStick.setOnClickListener(this);
         btnDisableVirtualStick.setOnClickListener(this);
+        btnEnableServer.setOnClickListener(this);
+        btnDisableServer.setOnClickListener(this);
         btnHorizontalCoordinate.setOnClickListener(this);
         btnSetYawControlMode.setOnClickListener(this);
         btnSetVerticalControlMode.setOnClickListener(this);
@@ -359,6 +384,39 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
         });
     }
 
+    private void processCommand(String command) {
+        switch (command.toUpperCase()) {
+//            case "TAKE_OFF":
+//                btnTakeOff.performClick();
+//                break;
+//            case "LAND":
+//                btnLand.performClick();
+//                break;
+//            case "MOVE_FORWARD":
+//                setDroneMovementState(DroneMovementState.FORWARD);
+//                break;
+//            case "MOVE_BACKWARD":
+//                setDroneMovementState(DroneMovementState.BACKWARD);
+//                break;
+//            case "MOVE_LEFT":
+//                setDroneMovementState(DroneMovementState.LEFT);
+//                break;
+//            case "MOVE_RIGHT":
+//                setDroneMovementState(DroneMovementState.RIGHT);
+//                break;
+//            case "ROTATE_LEFT":
+//                setDroneMovementState(DroneMovementState.ROTATE_LEFT);
+//                break;
+//            case "ROTATE_RIGHT":
+//                setDroneMovementState(DroneMovementState.ROTATE_RIGHT);
+//                break;
+//            case "STOP":
+//                setDroneMovementState(DroneMovementState.STOP);
+//                break;
+            default:
+                ToastUtils.setResultToToast("Unknown command: " + command);
+        }
+    }
 
     private void sendControlData() {
         if (null == sendVirtualStickDataTimer) {
@@ -398,6 +456,13 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
             case R.id.btn_disable_virtual_stick:
                 flightController.setVirtualStickModeEnabled(false, djiError ->
                         DialogUtils.showDialogBasedOnError(getContext(), djiError));
+                break;
+
+            case R.id.btn_enable_server_command:
+                startServer();
+                break;
+            case R.id.btn_disable_server_command:
+                stopServer();
                 break;
 
             case R.id.btn_take_off:
@@ -494,6 +559,29 @@ public class VirtualStickView extends RelativeLayout implements View.OnClickList
                 );
                 ToastUtils.setResultToToast(flightController.getRollPitchCoordinateSystem().name());
                 break;
+        }
+    }
+    private void startServer() {
+        if (!isServerRunning) {
+            tcpServer.startServer();
+            isServerRunning = true;
+
+            ToastUtils.setResultToToast("Server started");
+            DialogUtils.showDialog(getContext(), "Server started");
+            btnEnableServer.setEnabled(false);
+            btnDisableServer.setEnabled(true);
+        }
+    }
+
+    private void stopServer() {
+        if (isServerRunning) {
+            tcpServer.stopServer();
+            isServerRunning = false;
+
+            ToastUtils.setResultToToast("Server stopped");
+            DialogUtils.showDialog(getContext(), "Server stopped");
+            btnEnableServer.setEnabled(true);
+            btnDisableServer.setEnabled(false);
         }
     }
     @Override

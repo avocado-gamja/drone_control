@@ -24,6 +24,15 @@
         android:text="Simulator is off."
         android:textColor="@color/gray" />
 
+        <Button
+            android:id="@+id/btn_enable_virtual_stick"
+            style="@style/common_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_disable_virtual_stick"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/btn_disable_virtual_stick"
+            android:text="Enable Manual control" />
     <Button
         android:id="@+id/btn_disable_virtual_stick"
         style="@style/common_button"
@@ -34,15 +43,25 @@
         android:layout_marginTop="20dp"
         android:text="Disable Manual control" />
 
-    <Button
-        android:id="@+id/btn_enable_virtual_stick"
-        style="@style/common_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_disable_virtual_stick"
-        android:layout_marginTop="10dp"
-        android:layout_toLeftOf="@+id/btn_disable_virtual_stick"
-        android:text="Enable Manual control" />
+
+        <Button
+            android:id="@+id/btn_enable_server_command"
+            style="@style/common_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_disable_virtual_stick"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/btn_disable_virtual_stick"
+            android:text="Enable server command" />
+        <Button
+            android:id="@+id/btn_disable_server_command"
+            style="@style/common_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_disable_server_command"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/btn_disable_server_command"
+            android:text="Disable server command" />
 
     <Button
         android:id="@+id/btn_horizontal_coordinate"
